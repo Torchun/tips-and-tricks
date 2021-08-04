@@ -20,7 +20,7 @@ This code will add Git branch name:
     }
     ### 
 
-    [ "$PS1" = "\\s-\\v\\\$ " ] && PS1="[\u@\h \W]\033[\$(acolor)m\]\$(git_branch)\[\033[00m\] \$ "
+    [ "$PS1" = "\\s-\\v\\\$ " ] && PS1="[\u@\h \W]\[\033[\$(acolor)m\]\$(git_branch)\[\033[00m\] \$ "
 
 ```
 
