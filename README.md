@@ -1,1 +1,1 @@
-# tips-and-tricks
+# console tools configs and practices
