@@ -12,7 +12,7 @@ This code will add Git branch name:
 ```
     ### For Git colouring
     git_branch() {
-         git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/' | awk '{print " "$1""}'
+         git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/' | awk '{print " ["$1"]"}'
     }
 
     acolor() {
@@ -20,7 +20,8 @@ This code will add Git branch name:
     }
     ### 
 
-    [ "$PS1" = "\\s-\\v\\\$ " ] && PS1="[\u@\h \W]\[\033[\$(acolor)m\]\$(git_branch)\[\033[00m\] \$ "
+    # [ "$PS1" = "\\s-\\v\\\$ " ] && PS1="[\u@\h] \W\[\033[\$(acolor)m\]\$(git_branch)\[\033[00m\] \$ "
+    PS1="[\u@\h] \W\[\033[\$(acolor)m\]\$(git_branch)\[\033[00m\] \$ "
 
 ```
 
