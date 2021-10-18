@@ -30,3 +30,13 @@ PS1="[${_GREEN}\u${_RESET}${_BOLD_YELLOW}@${_RESET}${_BLUE}\h${_RESET}] \W\[\033
 ```
 
 Open a new terminal to verify.
+
+### Git alias
+Create `~/.gitconfig` with content:
+```
+[user]
+        name = Харитонова Ульяна Йорковна
+        email = uliana.yorkowna@example.com
+[alias]
+        g = log --graph --oneline --decorate --all
+```
