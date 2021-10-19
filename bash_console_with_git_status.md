@@ -40,3 +40,11 @@ Create `~/.gitconfig` with content:
 [alias]
         g = log --graph --oneline --decorate --all
 ```
+
+### Set keys to move window between workspaces
+```
+gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-down "['<Super><Ctrl><Alt>Down']"
+gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-up "['<Super><Ctrl><Alt>Up']"
+gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-left "['<Super><Ctrl><Alt>Left']"
+gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-right "['<Super><Ctrl><Alt>Right']"
+```
