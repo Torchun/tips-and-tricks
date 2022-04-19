@@ -1,3 +1,4 @@
+```
 ###
 # This will allow to re-run requests for {retries} times 
 # with enhancing sleep between requests
@@ -25,3 +26,4 @@ def requests_retry_session(
     session.mount('https://', adapter)
     return session
 # requests_retry_session().get(f"https://some.url")
+```
