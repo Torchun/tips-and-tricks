@@ -1,4 +1,7 @@
 ```
+import requests
+from requests.adapters import HTTPAdapter
+
 ###
 # This will allow to re-run requests for {retries} times 
 # with enhancing sleep between requests
