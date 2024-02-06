@@ -1,9 +1,7 @@
 ### Prepare RAM disk with source file filled with random data (not zeroed!)
 ```
 mkdir -p /tmp/ramdisk
-
 mount -t tmpfs -o size=4096M tmpfs /tmp/ramdisk
-
 dd if=/dev/urandom of=/tmp/ramdisk/testfile bs=1M count=4k
 ls -pla /tmp/ramdisk
 ```
@@ -56,6 +54,4 @@ df -h | grep -v loop
 
 ### Analyze `*.nmon` file with Nmon Analyzer
  - [https://nmon.sourceforge.io/pmwiki.php?n=Site.Nmon-Analyser](https://nmon.sourceforge.io/pmwiki.php?n=Site.Nmon-Analyser)
- 
- 
- - 
+ - [https://nmon.sourceforge.io/pmwiki.php?n=Site.Nmonchart](https://nmon.sourceforge.io/pmwiki.php?n=Site.Nmonchart)
