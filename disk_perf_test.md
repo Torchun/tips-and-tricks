@@ -8,11 +8,14 @@ Do not forget to change target disk to be tested and to replace file with block 
 NMON_PID=$(ps -ef | grep -i "/usr/bin/nmon" | grep -v grep | awk '{print $2}')
 echo $NMON_PID
 
-# time for b in 512 1024 2048 4096 8192 16384 32768; do
-time for b in 32768; do
+GB=10 # amount of gigabytes to test
+
+time for b in 512 1024 2048 4096 8192 16384 32768; do
   echo -e "\n===== block size ${b} =====\n"
   sleep 10
-  COUNT=$(echo "1024*1024*1024*48 / ${b}" | bc)
+  COUNT=$(echo "1024*1024*1024*${GB} / ${b}" | bc)
+
+  echo -e "\n===== WRITE =====\n"
   dd if=/dev/urandom of=/dev/sdb bs=${b} count=$COUNT ;
   
   echo -e "\n===== READ =====\n"
@@ -25,7 +28,6 @@ done
 kill -15 $NMON_PID
 
 exit 0
-
 ```
 
 ### Analyze `*.nmon` file with Nmon Analyzer
