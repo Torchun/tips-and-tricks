@@ -10,7 +10,7 @@ ls -pla /tmp/ramdisk
 
 
 ### Download script
-Do not forget to change target directory to be tested (on preferred disk).
+Do not forget to change target disk to be tested and to replace file with block device
 
 ```
 # run nmon stats collection with slice of 1 seconnd, count of 3600 times.
