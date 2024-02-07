@@ -3,8 +3,8 @@ Do not forget to change target disk to be tested and to replace file with block 
 
 ```
 # !!! CHANGE /dev/sdb TO PREFERRED DISK !!!
-# run nmon stats collection with slice of 1 seconnd, count of 3600 times.
-/usr/bin/nmon -f -s 1 -c 3600 -l 64 -dYAVPMNWSN^ -m ./
+# run nmon stats collection with slice of 1 seconnd, count of 86400 times == 24h.
+/usr/bin/nmon -f -s 1 -c 86400 -l 64 -dYAVPMNWSN^ -m ./
 NMON_PID=$(ps -ef | grep -i "/usr/bin/nmon" | grep -v grep | awk '{print $2}')
 echo $NMON_PID
 
