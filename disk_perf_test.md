@@ -1,43 +1,23 @@
-### Prepare RAM disk with source file filled with random data (not zeroed!)
-```
-mkdir -p /tmp/ramdisk
-mount -t tmpfs -o size=16384M tmpfs /tmp/ramdisk
-df -h /tmp/ramdisk
-echo "create urandom 16G file"
-dd if=/dev/urandom of=/tmp/ramdisk/testfile bs=1M count=16k
-ls -pla /tmp/ramdisk
-```
-
-
-### Download script
+### script
 Do not forget to change target disk to be tested and to replace file with block device
 
 ```
+# !!! CHANGE /dev/sdb TO PREFERRED DISK !!!
 # run nmon stats collection with slice of 1 seconnd, count of 3600 times.
 /usr/bin/nmon -f -s 1 -c 3600 -l 64 -dYAVPMNWSN^ -m ./
 NMON_PID=$(ps -ef | grep -i "/usr/bin/nmon" | grep -v grep | awk '{print $2}')
 echo $NMON_PID
 
-time for b in 512 1024 2048 4096 8192 16384 32768; do
+# time for b in 512 1024 2048 4096 8192 16384 32768; do
+time for b in 32768; do
   echo -e "\n===== block size ${b} =====\n"
   sleep 10
-  
-  SEQ=`seq 1 3` # 16*3 = 48 Gb
-  echo -e "\n===== WRITE =====\n"
-  for j in $SEQ; do
-    ### CHANGE ">>" TO TARGET DISK MOUNT
-    ### skip=1 means skip first block with bs block size - to prevent same bytes pattern
-    dd if=/tmp/ramdisk/testfile bs=${b} skip=1 >> /tmp/storage.test ;
-  done;
-  # add skipped bytes 
-  dd if=/tmp/ramdisk/testfile bs=${b} count=3 >> /tmp/storage.test ;
+  COUNT=$(echo "1024*1024*1024*48 / ${b}" | bc)
+  dd if=/dev/urandom of=/dev/sdb bs=${b} count=$COUNT ;
   
   echo -e "\n===== READ =====\n"
-  dd if=/tmp/storage.test of=/dev/null bs=${b};
+  dd if=/dev/sdb of=/dev/null bs=${b} count=$COUNT;
 
-  # cleanup
-  rm -f /tmp/storage.test;
-  
   sync;sync;
 done
 
@@ -45,12 +25,7 @@ done
 kill -15 $NMON_PID
 
 exit 0
-```
 
-### Remove ramfs mount
-```
-umount /tmp/ramdisk
-df -h | grep -v loop
 ```
 
 ### Analyze `*.nmon` file with Nmon Analyzer
