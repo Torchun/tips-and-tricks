@@ -1,12 +1,13 @@
 ### Prepare RAM disk with source file filled with random data (not zeroed!)
 ```
 mkdir -p /tmp/ramdisk
-mount -t tmpfs -o size=8192M tmpfs /tmp/ramdisk
+mount -t tmpfs -o size=16384M tmpfs /tmp/ramdisk
 df -h /tmp/ramdisk
-echo "create urandom 8G file"
-dd if=/dev/urandom of=/tmp/ramdisk/testfile bs=1M count=8k
+echo "create urandom 16G file"
+dd if=/dev/urandom of=/tmp/ramdisk/testfile bs=1M count=16k
 ls -pla /tmp/ramdisk
 ```
+
 
 ### Download script
 Do not forget to change target directory to be tested (on preferred disk).
@@ -21,7 +22,7 @@ time for b in 512 1024 2048 4096 8192 16384 32768; do
   echo -e "\n===== block size ${b} =====\n"
   sleep 10
   
-  SEQ=`seq 1 6` # 8*6 = 48 Gb
+  SEQ=`seq 1 3` # 16*3 = 48 Gb
   echo -e "\n===== WRITE =====\n"
   for j in $SEQ; do
     ### CHANGE ">>" TO TARGET DISK MOUNT
@@ -29,7 +30,7 @@ time for b in 512 1024 2048 4096 8192 16384 32768; do
     dd if=/tmp/ramdisk/testfile bs=${b} skip=1 >> /tmp/storage.test ;
   done;
   # add skipped bytes 
-  dd if=/tmp/ramdisk/testfile bs=65024 count=1 >> /tmp/storage.test ;
+  dd if=/tmp/ramdisk/testfile bs=${b} count=3 >> /tmp/storage.test ;
   
   echo -e "\n===== READ =====\n"
   dd if=/tmp/storage.test of=/dev/null bs=${b};
