@@ -8,6 +8,10 @@ Do not forget to change target disk to be tested and to replace file with block 
 NMON_PID=$(ps -ef | grep -i "/usr/bin/nmon" | grep -v grep | awk '{print $2}')
 echo $NMON_PID
 
+DATE=$(date +'%y%d%m_%H%M')
+iostat -x -d /dev/sdb -o JSON -t 1 > ./iostat_${DATE}.json & IOSTAT_PID=$!
+echo $IOSTAT_PID
+
 GB=10 # amount of gigabytes to test
 
 time for b in 512 1024 2048 4096 8192 16384 32768; do
@@ -26,6 +30,7 @@ done
 
 # stop nmon manually
 kill -15 $NMON_PID
+kill -15 $IOSTAT_PID
 
 exit 0
 ```
