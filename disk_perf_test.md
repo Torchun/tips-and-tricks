@@ -1,8 +1,36 @@
+### before
+```
+apt install screen nmon sysstat bc
+
+mkdir -p /ramdisk
+mount -t tmpfs -o size=7168M tmpfs /ramdisk
+df -h /ramdisk
+```
+```
+# generate files 1Gb size
+free -h
+CACHE_GB=7
+for j in `seq 1 ${CACHE_GB}`; do dd if=/dev/urandom of=/ramdisk/${j} bs=1M count=1k; done
+free -h
+```
+
 ### script
 Do not forget to change target disk to be tested and to replace file with block device
 
 ```
 # !!! CHANGE /dev/sdb TO PREFERRED DISK !!!
+IO_TARGET=/dev/vdd
+CACHE_GB=7
+GB=50 # amount of gigabytes to test
+
+# flush caches
+echo 3 > /proc/sys/vm/drop_caches
+free -h
+
+# re-fill caches
+for j in `seq 1 ${CACHE_GB}`; do dd if=/ramdisk/${j} of=/dev/null bs=10M; done
+free -h
+
 # run nmon stats collection with slice of 1 seconnd, count of 86400 times == 24h.
 /usr/bin/nmon -f -s 1 -c 86400 -l 64 -dYAVPMNWSN^ -m ./
 NMON_PID=$(ps -ef | grep -i "/usr/bin/nmon" | grep -v grep | awk '{print $2}')
@@ -12,18 +40,21 @@ DATE=$(date +'%y%d%m_%H%M')
 iostat -x -d /dev/sdb -o JSON -t 1 > ./iostat_${DATE}.json & IOSTAT_PID=$!
 echo $IOSTAT_PID
 
-GB=10 # amount of gigabytes to test
 
-time for b in 512 1024 2048 4096 8192 16384 32768; do
+
+time for b in 4096 8192 16384 32768; do
   echo -e "\n===== block size ${b} =====\n"
   sleep 10
-  COUNT=$(echo "1024*1024*1024*${GB} / ${b}" | bc)
 
   echo -e "\n===== WRITE =====\n"
-  dd if=/dev/urandom of=/dev/sdb bs=${b} count=$COUNT ;
+  for j in `seq 1 ${GB}`; do
+    RANDOMFILE=$((1 + $RANDOM % ${CACHE_GB}))
+    dd if=/ramdisk/${RANDOMFILE} of=${IO_TARGET} bs=${b}
+  done
   
   echo -e "\n===== READ =====\n"
-  dd if=/dev/sdb of=/dev/null bs=${b} count=$COUNT;
+  COUNT=$(echo "1024*1024*1024*${GB} / ${b}" | bc)
+  dd if=${IO_TARGET} of=/dev/null bs=${b} count=$COUNT;
 
   sync;sync;
 done
