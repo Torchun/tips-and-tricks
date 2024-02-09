@@ -30,7 +30,7 @@ done
 
 # stop nmon manually
 kill -15 $NMON_PID
-kill -15 $IOSTAT_PID
+kill -SIGINT $IOSTAT_PID
 
 exit 0
 ```
