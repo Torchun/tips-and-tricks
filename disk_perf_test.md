@@ -53,7 +53,7 @@ time for b in 4096 8192 16384 32768; do
 
   echo -e "\n===== WRITE =====\n"
   for j in `seq 1 ${GB}`; do
-    RANDOMFILE=$((1 + $RANDOM % ${CACHE_GB}))
+    RANDOMFILE=$((1 + $RANDOM % ${FILE_COUNT}))
     dd if=/ramdisk/${RANDOMFILE} of=${IO_TARGET} bs=${b}
   done
   
