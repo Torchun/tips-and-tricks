@@ -37,7 +37,7 @@ NMON_PID=$(ps -ef | grep -i "/usr/bin/nmon" | grep -v grep | awk '{print $2}')
 echo $NMON_PID
 
 DATE=$(date +'%y%d%m_%H%M')
-iostat -x -d /dev/sdb -o JSON -t 1 > ./iostat_${DATE}.json & IOSTAT_PID=$!
+iostat -x -d ${IO_TARGET} -o JSON -t 1 > ./iostat_${DATE}.json & IOSTAT_PID=$!
 echo $IOSTAT_PID
 
 
