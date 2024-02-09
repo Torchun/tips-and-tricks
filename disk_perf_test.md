@@ -26,7 +26,7 @@ IO_TARGET=/dev/vdd
 CACHE_GB=12
 SIZE_GB=4
 FILE_COUNT=$(echo "${CACHE_GB} / ${SIZE_GB}" | bc)
-GB=50 # amount of gigabytes to test
+GB=48 # amount of gigabytes to test
 
 # flush caches
 echo 3 > /proc/sys/vm/drop_caches
@@ -52,7 +52,7 @@ time for b in 4096 8192 16384 32768; do
   sleep 10
 
   echo -e "\n===== WRITE =====\n"
-  for j in `seq 1 ${GB}`; do
+  for j in `seq 1 $(echo "${GB} / ${SIZE_GB}" | bc)`; do
     RANDOMFILE=$((1 + $RANDOM % ${FILE_COUNT}))
     dd if=/ramdisk/${RANDOMFILE} of=${IO_TARGET} bs=${b}
   done
