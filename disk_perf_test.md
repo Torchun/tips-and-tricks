@@ -5,6 +5,7 @@ apt install screen nmon sysstat bc
 mkdir -p /ramdisk
 mount -t tmpfs -o size=7168M tmpfs /ramdisk
 df -h /ramdisk
+lsblk -b -io KNAME,TYPE,SIZE,MODEL | awk 'BEGIN{OFS="\t"} {if (FNR>1) print $1,$2,$3/1073741824"G",$4; else print $0}'
 ```
 ```
 # generate files 1Gb size
