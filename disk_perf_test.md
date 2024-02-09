@@ -3,15 +3,17 @@
 apt install screen nmon sysstat bc
 
 mkdir -p /ramdisk
-mount -t tmpfs -o size=7168M tmpfs /ramdisk
+mount -t tmpfs -o size=12288M tmpfs /ramdisk
 df -h /ramdisk
 lsblk -b -io KNAME,TYPE,SIZE,MODEL | awk 'BEGIN{OFS="\t"} {if (FNR>1) print $1,$2,$3/1073741824"G",$4; else print $0}'
 ```
 ```
-# generate files 1Gb size
+# generate files 4Gb size
 free -h
-CACHE_GB=7
-for j in `seq 1 ${CACHE_GB}`; do dd if=/dev/urandom of=/ramdisk/${j} bs=1M count=1k; done
+CACHE_GB=12
+SIZE_GB=4
+FILE_COUNT=$(echo "${CACHE_GB} / ${SIZE_GB}" | bc)
+for j in `seq 1 ${FILE_COUNT}`; do dd if=/dev/urandom of=/ramdisk/${j} bs=1M count=${SIZE_GB}k; done
 free -h
 ```
 
@@ -21,7 +23,9 @@ Do not forget to change target disk to be tested and to replace file with block 
 ```
 # !!! CHANGE /dev/vdd TO PREFERRED DISK !!!
 IO_TARGET=/dev/vdd
-CACHE_GB=7
+CACHE_GB=12
+SIZE_GB=4
+FILE_COUNT=$(echo "${CACHE_GB} / ${SIZE_GB}" | bc)
 GB=50 # amount of gigabytes to test
 
 # flush caches
@@ -29,7 +33,7 @@ echo 3 > /proc/sys/vm/drop_caches
 free -h
 
 # re-fill caches
-for j in `seq 1 ${CACHE_GB}`; do dd if=/ramdisk/${j} of=/dev/null bs=10M; done
+for j in `seq 1 ${FILE_COUNT}`; do dd if=/ramdisk/${j} of=/dev/null bs=10M; done
 free -h
 
 # run nmon stats collection with slice of 1 seconnd, count of 86400 times == 24h.
