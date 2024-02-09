@@ -46,8 +46,8 @@ iostat -x -d ${IO_TARGET} -o JSON -t 1 > ./iostat_${DATE}.json & IOSTAT_PID=$!
 echo $IOSTAT_PID
 
 
-
-time for b in 4096 8192 16384 32768; do
+# 4k = standart bs, 1M = sort of "huge" bs
+time for b in 4096 1048576; do
   echo -e "\n===== block size ${b} =====\n"
   sleep 10
 
