@@ -18,7 +18,7 @@ free -h
 Do not forget to change target disk to be tested and to replace file with block device
 
 ```
-# !!! CHANGE /dev/sdb TO PREFERRED DISK !!!
+# !!! CHANGE /dev/vdd TO PREFERRED DISK !!!
 IO_TARGET=/dev/vdd
 CACHE_GB=7
 GB=50 # amount of gigabytes to test
