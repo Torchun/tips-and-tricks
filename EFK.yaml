@@ -63,3 +63,5 @@ networks:
   local:
     driver: bridge
 
+# https://blog.codefarm.me/2018/06/29/elasticsearch-fluentd-kibana-docker-compose/
+
